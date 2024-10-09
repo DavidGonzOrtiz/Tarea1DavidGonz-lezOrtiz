@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container d-flex flex-column align-items-center justify-content-center" style="height: 300px; width:350px; border: solid 1px gray;">
+        <!-- Primera fila -->
+        <div class="row justify-content-lg-start mb-3" style="border: solid 1px gray;">
+            <div class="col-md-8">
+                <input type="text" class="form-control-lg align-items-start" id="resultado" readonly />
+            </div>
+        </div>
+        <div class="p-3" style="border: solid 1px black;">
+            <!-- Segunda fila -->
+            <div class="row justify-content-center">
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="1">1</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="2">2</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="3">3</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 operaciones" value="+">+</button>
+                </div>
+            </div>
+            <!-- Tercera fila -->
+            <div class="row justify-content-center">
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="4">4</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="5">5</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="6">6</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 operaciones" value="-">-</button>
+                </div>
+            </div>
+            <!-- Cuarta fila -->
+            <div class="row justify-content-center">
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="7">7</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="8">8</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="9">9</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 operaciones" value="*">x</button>
+                </div>
+            </div>
+            <!-- Quinta fila -->
+            <div class="row justify-content-center">
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150" onclick="limpiar()">C</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 number" value="0">0</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150" id="igual">=</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-lg w-150 operaciones" value="/">/</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    var resultado = document.getElementById('resultado');
+    var operacion = '';
+    var primerNumero = '';
+    var segundoNumero = '';
+    var operacionCompleta = '';
+
+    // Números
+    var botonesNumeros = document.querySelectorAll('.number');
+    botonesNumeros.forEach(function (boton) {
+        boton.addEventListener('click', function () {
+            resultado.value += this.value;
+            operacionCompleta += this.value; 
+        });
+    });
+
+    // Operaciones
+    var botonesOperaciones = document.querySelectorAll('.operaciones');
+    botonesOperaciones.forEach(function (boton) {
+        boton.addEventListener('click', function () {
+            if (resultado.value !== '') {
+                primerNumero = parseFloat(resultado.value);
+                operacion = this.value; 
+                resultado.value += ' ' + this.value + ' '; 
+                operacionCompleta += ' ' + this.value + ' '; 
+            }
+        });
+    });
+
+    // Realizar operación con =
+    var botonIgual = document.getElementById('igual');
+    botonIgual.addEventListener('click', function () {
+        if (resultado.value !== '' && primerNumero !== '') {
+            segundoNumero = parseFloat(resultado.value.split(operacion)[1]);
+
+            // Realizar la operación
+            var total;
+            switch (operacion) {
+                case '+':
+                    total = primerNumero + segundoNumero;
+                    break;
+                case '-':
+                    total = primerNumero - segundoNumero;
+                    break;
+                case '*':
+                    total = primerNumero * segundoNumero;
+                    break;
+                case '/':
+                    total = primerNumero / segundoNumero;
+                    break;
+            }
+
+            operacionCompleta += ` = ${total}`;
+
+            resultado.value = operacionCompleta;
+
+            primerNumero = '';
+            segundoNumero = '';
+            operacion = '';
+            operacionCompleta = '';
+        }
+    });
+
+    // Limpiar
+    function limpiar() {
+        resultado.value = '';
+    }
+</script>

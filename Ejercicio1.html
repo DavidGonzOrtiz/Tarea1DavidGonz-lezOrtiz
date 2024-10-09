@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="Scripts/bootstrap.js"></script>
+</head>
+<body>
+    <div class="container" style="background-color:aliceblue">
+        <h1 class="text-center">Factura del cliente</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="mb-5 text-center">
+                    <label class="form-check-label" for="chkIva">¿Aplicamos IVA?</label>
+                    <input type="checkbox" id="chkIva" class="form-check-input" style="border: solid 2px black" /><br />
+                    <input type="button"
+                           class="btn btn-danger"
+                           onclick="muestraDatos()"
+                           value="Enviar" /> 
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var factura = {
+        cliente: {
+            nombre: "",
+            apellidos: ""
+        },
+        trabajos: [
+            { descripcion: "Albañileria", numHoras: 3, precioHoras: 9},
+            { descripcion: "Fontaneria", numHoras: 2, precioHoras: 11},
+            { descripcion: "Electricidad", numHoras: 6, precioHoras: 10},
+            { descripcion: "Carpinteria", numHoras: 8, precioHoras: 8}
+        ],
+        informacion: {
+            importe: 0,
+            total: 0,
+            IVA: 21 
+        }
+    };
+
+    // Calcular el total
+    factura.calcularTotal = function () {
+        // Total = importe + IVA
+        this.informacion.importe = 0;
+        // Recorremos la lista de trabajos para sacar el importe
+        for (var i = 0; i < this.trabajos.length; i++) {
+            this.informacion.importe += this.trabajos[i].numHoras * this.trabajos[i].precioHoras;
+        }
+        return this.informacion.importe;
+    };
+
+    // Pedir datos al cliente
+    factura.pedirDatosCliente = function () {
+        var nombreCliente = prompt("Introduce tu nombre");
+        factura.cliente.nombre = nombreCliente;
+        var apellidoCliente = prompt("Introduce tu apellido");
+        factura.cliente.apellidos = apellidoCliente;
+    };
+
+    // Comprobar el check
+    const checkBox = document.getElementById('chkIva');
+    checkBox.addEventListener('change', function () {
+        var totalFactura = factura.calcularTotal(); 
+        if (checkBox.checked) {
+            var importeIva = (1 + (factura.informacion.IVA / 100));
+            factura.informacion.total = (totalFactura * importeIva).toFixed(3);
+        } else {
+            factura.informacion.total = totalFactura; 
+        }
+        console.log("El importe total de la factura es:" + factura.informacion.total);
+    });
+
+    // Mostrar Datos
+    function muestraDatos() {
+        factura.pedirDatosCliente();
+        var totalFactura = factura.calcularTotal();
+        var nombreCli = factura.cliente.nombre;
+        var apellidoCli = factura.cliente.apellidos;
+
+        console.log(`Nombre Cliente: ${nombreCli}, Apellido Cliente: ${apellidoCli} Total Factura: ${totalFactura}`);
+    }
+
+
+</script>
